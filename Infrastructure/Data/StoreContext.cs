@@ -1,0 +1,16 @@
+// using API.Entities;
+using Core.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure.Data
+{
+    public class StoreContext : DbContext
+    {
+        public StoreContext(DbContextOptions<StoreContext> options) : base(options)
+        {
+        }
+
+        //products is the name of the table in sqlserver
+        public DbSet<Product> Products { get; set; }
+    }
+}
