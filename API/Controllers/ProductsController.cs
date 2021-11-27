@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Dtos;
+using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Infrastructure.Data;
 
 // using API.Data;
@@ -17,11 +20,21 @@ namespace API.Controllers
     public class ProductsController : ControllerBase
     {
         // private readonly StoreContext _context;
-        private readonly IProductRepository _repo;
 
-        public ProductsController(IProductRepository repo)
+        private readonly IGenericRepository<Product> _productsRepo;
+        private readonly IGenericRepository<ProductBrand> _productBrandRepo;
+        private readonly IGenericRepository<ProductType> _productTypeRepo;
+        private readonly IMapper _mapper;
+        public ProductsController(IGenericRepository<Product> productsRepo,
+         IGenericRepository<ProductBrand> productBrandRepo,
+          IGenericRepository<ProductType> productTypeRepo, IMapper mapper)
         {
-            _repo = repo;
+
+            _productTypeRepo = productTypeRepo;
+            _productBrandRepo = productBrandRepo;
+            _productsRepo = productsRepo;
+            _mapper = mapper;
+
             // _context = context;
 
             // _mapper = mapper;
@@ -31,30 +44,37 @@ namespace API.Controllers
 
         }
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
 
         {
-            // var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+            var spec = new ProductsWithTypesAndBrandsSpecification();
 
             // var countSpec = new ProductWithFiltersForCountSpecificication(productParams);
 
             // var totalItems = await _productsRepo.CountAsync(countSpec);
 
-            // var products = await _productsRepo.ListAsync(spec);
+            var products = await _productsRepo.ListAsync(spec);
 
             // var data = _mapper
             //     .Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+            //    return new ProductToReturnDto 
+            //     {
+            //         Id = product.Id,
+            //         Name = product.Name,
 
-            var products = await _repo.GetProductsAsync();
-            return Ok(products);
+
+            //     }
+            // var products = await _productsRepo.ListAsync(spec);
+           return Ok(_mapper
+           .Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products));
         }
 
         [HttpGet("{id}")]
 
-        public async Task<ActionResult<List<Product>>> GetProduct(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
 
         {
-            // var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+            var spec = new ProductsWithTypesAndBrandsSpecification(id);
 
             // var countSpec = new ProductWithFiltersForCountSpecificication(productParams);
 
@@ -65,21 +85,23 @@ namespace API.Controllers
             // var data = _mapper
             //     .Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
 
-            var prodctby1 = await _repo.GetProductByidAsync(id);
-            return Ok(prodctby1);
+            var prodctbyId = await _productsRepo.GetEntityWithSpec(spec);
+
+            return _mapper.Map<Product, ProductToReturnDto>(prodctbyId);
+            // return Ok(productnew);
         }
 
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()
         {
-            return Ok(await  _repo.GetProductBrandsAsync());
+            return Ok(await _productBrandRepo.ListAllAsync());
         }
 
         // [Cached(1000)]
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
         {
-            return Ok(await  _repo.GetProductTypesAsync());
+            return Ok(await _productTypeRepo.ListAllAsync());
         }
 
 

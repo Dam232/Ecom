@@ -5,7 +5,8 @@ using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
-{
+{   
+    // Here is the place where we wirte the API queires or SQL queries  
     public class ProductRepository : IProductRepository
     {
         private readonly StoreContext _context;
@@ -32,7 +33,7 @@ namespace Infrastructure.Data
 
         public async Task<IReadOnlyList<Product>> GetProductsAsync()
         {
-
+// Here is the place where we wirte the API queires or SQL queries  
             return await _context.Products
             .Include(p => p.ProductType)
             .Include(p => p.ProductBrand)
