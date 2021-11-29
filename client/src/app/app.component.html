@@ -1,1 +1,11 @@
+<app-nav-bar></app-nav-bar>
+
 <h1>dada {{ title }}</h1>
+
+<div class="container" >
+    <li class="list-unstyled" *ngFor="let product of products ">
+        {{product.name}}
+        {{product.id}}
+
+    </li>
+</div>
