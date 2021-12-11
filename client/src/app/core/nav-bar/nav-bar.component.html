@@ -24,9 +24,7 @@
   <nav class="my-2 my-md-0 mr-md-3 text-uppercase" style="font-size: larger">
     <a
       class="p-2 text-dark"
-      [routerLink]="['/']"
       routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
       >Home</a
     >
     <a class="p-2 text-dark" routerLink="/shop" routerLinkActive="active"
@@ -44,10 +42,10 @@
       <!-- <div *ngIf="(basket$ | async)" class="cart-no">{{(basket$ | async).items.length}}</div> -->
     </a>
 
-    <a routerLink="/account/login" class="btn btn-outline-secondary mr-2"
+    <a class="btn btn-outline-secondary mr-2"
       >Login</a
     >
-    <a routerLink="/account/register" class="btn btn-outline-secondary mr-3"
+    <a class="btn btn-outline-secondary mr-3"
       >Sign up</a
     >
   </div>
